@@ -1,42 +1,19 @@
 <?php
-/*
- +--------------------------------------------------------------------+
- | CiviCRM version 4.6                                                |
- +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2015                                |
- +--------------------------------------------------------------------+
- | This file is a part of CiviCRM.                                    |
- |                                                                    |
- | CiviCRM is free software; you can copy, modify, and distribute it  |
- | under the terms of the GNU Affero General Public License           |
- | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
- |                                                                    |
- | CiviCRM is distributed in the hope that it will be useful, but     |
- | WITHOUT ANY WARRANTY; without even the implied warranty of         |
- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
- | See the GNU Affero General Public License for more details.        |
- |                                                                    |
- | You should have received a copy of the GNU Affero General Public   |
- | License and the CiviCRM Licensing Exception along                  |
- | with this program; if not, contact CiviCRM LLC                     |
- | at info[AT]civicrm[DOT]org. If you have questions about the        |
- | GNU Affero General Public License or the licensing of CiviCRM,     |
- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
- +--------------------------------------------------------------------+
- */
+/* https://civicrm.org/licensing */
 
+use CRM_WebTracking_ExtensionUtil as E;
 /**
  * This class generates form components for processing Contribution Web Tracking
  */
 class CRM_WebTracking_Form_ContributionPage_WebTracking extends CRM_Contribute_Form_ContributionPage {
 
+  const PAGE_CATEGORY = 'civicrm_contribution';
+
   /**
    * Set variables up before form is built.
-   *
-   * @return void
    */
   public function preProcess() {
-    CRM_Core_Resources::singleton()->addStyleFile('org.civicrm.webtracking', 'css/web-tracking-form.css');
+    CRM_Core_Resources::singleton()->addStyleFile(E::LONG_NAME, 'css/web-tracking-form.css');
     parent::preProcess();
   }
 
@@ -46,11 +23,11 @@ class CRM_WebTracking_Form_ContributionPage_WebTracking extends CRM_Contribute_F
    * @return array
    */
   public function setDefaultValues() {
-    
     $params['page_id']=$this->_id;
-    $params['page_category']="civicrm_contribution";
-    $defaults = array();
+    $params['page_category'] = self::PAGE_CATEGORY;
+    $defaults = [];
     CRM_WebTracking_BAO_WebTracking::retrieve($params, $defaults);
+    $defaults['tracking_id'] = CRM_WebTracking_Settings::getValue('tracking_id');
 
     return $defaults;
   }
@@ -61,40 +38,38 @@ class CRM_WebTracking_Form_ContributionPage_WebTracking extends CRM_Contribute_F
    * @return void
    */
   public function buildQuickForm() {
-    // TODO:: Is this required?
-    $this->applyFilter('__ALL__', 'trim');
-
     // Checkbox to ask whether or not to enable web tracking
-    $this->addElement('checkbox', 'enable_tracking', ts('Enable web tracking'));
+    $this->addElement('checkbox', 'enable_tracking', E::ts('Enable web tracking'));
 
     // Text field to input the tracking id
-    $this->add('text', 'tracking_id', ts('Tracking ID'));
+    $element = $this->add('text', 'tracking_id', E::ts('Tracking ID'));
+    $element->freeze();
 
     // Checkbox to ask whether or not to enable event tracking
-    $this->addElement('checkbox', 'ga_event_tracking', ts('Enable event tracking'));
+    $this->addElement('checkbox', 'ga_event_tracking', E::ts('Enable event tracking'));
 
     // Checkbox to ask whether or not to track when the user visits the contribution page
-    $this->addElement('checkbox', 'track_register', ts('Track visit to contribution page'));
+    $this->addElement('checkbox', 'track_register', E::ts('Track visit to contribution page'));
 
     // Checkbox to ask whether or not to track when the user visits the confirmation page
-    $this->addElement('checkbox', 'track_confirm_register', ts('Track visit to confirmation page'));
+    $this->addElement('checkbox', 'track_confirm_register', E::ts('Track visit to confirmation page'));
     
     // Checkbox to ask whether or not to track when the user visits the thank you page
-    $this->addElement('checkbox', 'track_thank_you', ts('Track visit to thank you page'));
+    $this->addElement('checkbox', 'track_thank_you', E::ts('Track visit to thank you page'));
 
     // Checkbox to ask whether or not to track when the user changes default price option
-    $this->addElement('checkbox', 'track_price_change', ts('Track price change'));
+    $this->addElement('checkbox', 'track_price_change', E::ts('Track price change'));
 
     // Checkbox to ask whether or not to enable ecommerce tracking
-    $this->addElement('checkbox', 'track_ecommerce', ts('Enable source tracking'));
+    $this->addElement('checkbox', 'track_ecommerce', E::ts('Enable source tracking'));
 
     // Checkbox to ask whether the page is the primary page of the experiment 
-    $this->addElement('checkbox', 'is_experiment', ts('Primary page of experiment'));
+    $this->addElement('checkbox', 'is_experiment', E::ts('Primary page of experiment'));
 
     // Text field to input the experiment key
-    $this->add('text', 'experiment_id', ts('Experiment key'));
+    $this->add('text', 'experiment_id', E::ts('Experiment key'));
 
-    $this->addFormRule(array('CRM_WebTracking_Form_ContributionPage_WebTracking', 'formRule'));
+    $this->addFormRule(['CRM_WebTracking_Form_ContributionPage_WebTracking', 'formRule']);
 
     parent::buildQuickForm();
   }
@@ -108,19 +83,19 @@ class CRM_WebTracking_Form_ContributionPage_WebTracking extends CRM_Contribute_F
    *   list of errors to be posted back to the form
    */
   public static function formRule($values) {
-    $errors = array();
+    $errors = [];
 
     if (isset($values['enable_tracking']) && $values['enable_tracking'] == 1) {
       // Checking that UAID provided by the customer has the string 'UA-' as its prefix
       $pos = strpos($values['tracking_id'],'UA-'); 
       if ($pos===false || $pos!==0) {
-        $errors['tracking_id'] = ts('Please provide a valid tracking id');
+        $errors['tracking_id'] = E::ts('Please provide a valid tracking id');
       }
     }
 
     if (isset($values['is_experiment']) && $values['is_experiment'] == 1) {
       if ($values['experiment_id'] == '') {
-        $errors['experiment_id'] = ts('Please provide a valid experiment key');
+        $errors['experiment_id'] = E::ts('Please provide a valid experiment key');
       }
     }
     
@@ -129,17 +104,14 @@ class CRM_WebTracking_Form_ContributionPage_WebTracking extends CRM_Contribute_F
 
   /**
    * Process the form submission.
-   *
-   * @return void
    */
   public function postProcess() {
-
     // TODO:: is this required?
     $params = $this->controller->exportValues($this->_name);
 
     $existParams['page_id'] = $this->_id;
-    $existParams['page_category'] = "civicrm_contribution";
-    $existingEnrty = array();
+    $existParams['page_category'] = self::PAGE_CATEGORY;
+    $existingEnrty = [];
     
     CRM_WebTracking_BAO_WebTracking::retrieve($existParams, $existingEnrty);
 
@@ -165,10 +137,7 @@ class CRM_WebTracking_Form_ContributionPage_WebTracking extends CRM_Contribute_F
     $params['experiment_id'] = CRM_Utils_Array::value('experiment_id', $params, NULL);
 
     // Updating the database with the new entry
-    $event = CRM_WebTracking_BAO_WebTracking::add($params);
-    $subPage = 'webtracking';
-    $nextPage = 'webtracking';
-    $subPageName = 'WebTracking';
+    CRM_WebTracking_BAO_WebTracking::add($params);
 
     parent::endPostProcess();
   }
@@ -179,7 +148,7 @@ class CRM_WebTracking_Form_ContributionPage_WebTracking extends CRM_Contribute_F
    * @return string
    */
   public function getTitle() {
-    return ts('Contribution Web Tracking Settings');
+    return E::ts('Contribution Web Tracking Settings');
   }
 
 }

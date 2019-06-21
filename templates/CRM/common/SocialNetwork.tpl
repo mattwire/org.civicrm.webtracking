@@ -1,31 +1,7 @@
-{*
- +--------------------------------------------------------------------+
- | CiviCRM version 4.6                                                |
- +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2015                                |
- +--------------------------------------------------------------------+
- | This file is a part of CiviCRM.                                    |
- |                                                                    |
- | CiviCRM is free software; you can copy, modify, and distribute it  |
- | under the terms of the GNU Affero General Public License           |
- | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
- |                                                                    |
- | CiviCRM is distributed in the hope that it will be useful, but     |
- | WITHOUT ANY WARRANTY; without even the implied warranty of         |
- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
- | See the GNU Affero General Public License for more details.        |
- |                                                                    |
- | You should have received a copy of the GNU Affero General Public   |
- | License and the CiviCRM Licensing Exception along                  |
- | with this program; if not, contact CiviCRM LLC                     |
- | at info[AT]civicrm[DOT]org. If you have questions about the        |
- | GNU Affero General Public License or the licensing of CiviCRM,     |
- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
- +--------------------------------------------------------------------+
-*}
+{* https://civicrm.org/licensing *}
+
 {* Adds social networking buttons (Facebook like, Twitter tweet, Google +1, LinkedIn) to public pages (online contributions, event info) *}
 
-<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
 <div class="crm-section crm-socialnetwork help">
 
     {if $enable_tracking eq 1}
@@ -53,13 +29,14 @@
     <div class="crm-fb-tweet-buttons">
         {if $emailMode eq true}
             {*use images for email*}
-            <a href="http://twitter.com/share?url={$twitterUrl}&amp;text={$title}" id="crm_tweet">
+            <a href="https://twitter.com/share?url={$twitterUrl}&amp;text={$title}" id="crm_tweet">
                 <img title="Twitter Tweet Button" src="{$config->userFrameworkResourceURL|replace:'https://':'http://'}/i/tweet.png" width="55px" height="20px"  alt="Tweet Button">
             </a>
-            <a href="http://www.facebook.com/plugins/like.php?href={$url}" target="_blank">
+            <a href="https://www.facebook.com/plugins/like.php?href={$url}" target="_blank">
                 <img title="Facebook Like Button" src="{$config->userFrameworkResourceURL|replace:'https://':'http://'}/i/fblike.png" alt="Facebook Button" />
             </a>
         {else}
+            <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
             {*use advanced buttons for pages*}
             <div class="label">
                 <iframe allowtransparency="true" frameborder="0" scrolling="no"
@@ -68,7 +45,7 @@
                 </iframe>
             </div>
             <div class="label">
-                <g:plusone href={$googlePlusOneUrl|replace:'localhost:7979':'bpososdpit.localtunnel.me'}></g:plusone>
+                <g:plusone href={$googlePlusOneUrl}></g:plusone>
             </div>
             <div class="label" style="width:300px;">
                 <iframe src="https://www.facebook.com/plugins/like.php?app_id=240719639306341&amp;href={$fbUrl|escape:'url'}&amp;send=false&amp;layout=standard&amp;show_faces=false&amp;action=like&amp;colorscheme=light" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:300px; height:30px;" allowTransparency="true">

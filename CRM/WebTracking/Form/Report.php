@@ -1,39 +1,42 @@
 <?php
+/* https://civicrm.org/licensing */
+
+use CRM_WebTracking_ExtensionUtil as E;
 
 class CRM_WebTracking_Form_Report extends CRM_Core_Form {
 
   /**
    * Set variables up before form is built.
-   *
-   * @return void
    */
   public function preProcess() {
-    CRM_Core_Resources::singleton()->addStyleFile('org.civicrm.webtracking', 'css/web-tracking-report-form.css');
+    if (empty(civicrm_api3('setting', 'getValue', ['group' => 'Web Tracking', 'name' => 'webtracking_report_id']))) {
+      CRM_Core_Session::setStatus(E::ts('You need to configure the analytics embed API client ID before accessing reports'), 'Configuration error', 'alert');
+      CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/webtracking/settings', 'reset=1'));
+    }
+    CRM_Core_Resources::singleton()->addStyleFile(E::LONG_NAME, 'css/web-tracking-report-form.css');
 
-    CRM_Core_Resources::singleton()->addStyleFile('org.civicrm.webtracking', 'css/EmbedAPI/main.css');
-    CRM_Core_Resources::singleton()->addStyleFile('org.civicrm.webtracking', 'css/EmbedAPI/components/flex-grid.css');
-    CRM_Core_Resources::singleton()->addStyleFile('org.civicrm.webtracking', 'css/EmbedAPI/components/dashboard.css');
-    CRM_Core_Resources::singleton()->addStyleFile('org.civicrm.webtracking', 'css/EmbedAPI/components/titles.css');
-    CRM_Core_Resources::singleton()->addStyleFile('org.civicrm.webtracking', 'css/EmbedAPI/components/active-users.css');
-    CRM_Core_Resources::singleton()->addStyleFile('org.civicrm.webtracking', 'css/EmbedAPI/components/view-selector.css');
-    CRM_Core_Resources::singleton()->addStyleFile('org.civicrm.webtracking', 'css/EmbedAPI/components/date-range-selector.css');
+    CRM_Core_Resources::singleton()->addStyleFile(E::LONG_NAME, 'css/EmbedAPI/main.css');
+    CRM_Core_Resources::singleton()->addStyleFile(E::LONG_NAME, 'css/EmbedAPI/components/flex-grid.css');
+    CRM_Core_Resources::singleton()->addStyleFile(E::LONG_NAME, 'css/EmbedAPI/components/dashboard.css');
+    CRM_Core_Resources::singleton()->addStyleFile(E::LONG_NAME, 'css/EmbedAPI/components/titles.css');
+    CRM_Core_Resources::singleton()->addStyleFile(E::LONG_NAME, 'css/EmbedAPI/components/active-users.css');
+    CRM_Core_Resources::singleton()->addStyleFile(E::LONG_NAME, 'css/EmbedAPI/components/view-selector.css');
+    CRM_Core_Resources::singleton()->addStyleFile(E::LONG_NAME, 'css/EmbedAPI/components/date-range-selector.css');
 
-    CRM_Core_Resources::singleton()->addScriptFile('org.civicrm.webtracking', 'js/Report/GaApiMain.js', 6, 'page-body');
-    CRM_Core_Resources::singleton()->addScriptFile('org.civicrm.webtracking', 'js/Report/ActiveUsers.js', 7, 'page-body');
-    CRM_Core_Resources::singleton()->addScriptFile('org.civicrm.webtracking', 'js/Report/DateRangeSelector.js', 8, 'page-body');
-    CRM_Core_Resources::singleton()->addScriptFile('org.civicrm.webtracking', 'js/Report/Dashboard.js', 9, 'page-body');
+    CRM_Core_Resources::singleton()->addScriptFile(E::LONG_NAME, 'js/Report/GaApiMain.js', 6, 'page-body');
+    CRM_Core_Resources::singleton()->addScriptFile(E::LONG_NAME, 'js/Report/ActiveUsers.js', 7, 'page-body');
+    CRM_Core_Resources::singleton()->addScriptFile(E::LONG_NAME, 'js/Report/DateRangeSelector.js', 8, 'page-body');
+    CRM_Core_Resources::singleton()->addScriptFile(E::LONG_NAME, 'js/Report/Dashboard.js', 9, 'page-body');
     parent::preProcess();
   }
 
   /**
    * Set default values for the form
-   *
-   * @return void
    */
   public function setDefaultValues() {
-    $defaults = array(); 
-    $defaults['web_tracking_report_id'] = civicrm_api3('setting', 'getValue', array('group' => 'Web Tracking', 'name' => 'web_tracking_report_id'));
-    CRM_Core_Resources::singleton()->addVars('WebTracking', array('web_tracking_report_id' => $defaults['web_tracking_report_id']));
+    $defaults = [];
+    $defaults['web_tracking_report_id'] = civicrm_api3('setting', 'getValue', ['group' => 'Web Tracking', 'name' => 'webtracking_report_id']);
+    CRM_Core_Resources::singleton()->addVars('WebTracking', ['web_tracking_report_id' => $defaults['web_tracking_report_id']]);
     return $defaults;
   }
 
@@ -43,22 +46,18 @@ class CRM_WebTracking_Form_Report extends CRM_Core_Form {
    * @return void
    */
   public function buildQuickForm() {
-
-    // TODO:: Is this required?
-    $this->applyFilter('__ALL__', 'trim');
-
     // Text field to input the client ID
-    $this->add('text', 'web_tracking_report_id', ts('Client ID'));
+    $this->add('text', 'web_tracking_report_id', E::ts('Client ID'));
 
-    $this->addFormRule(array('CRM_WebTracking_Form_Report', 'formRule'));
+    $this->addFormRule(['CRM_WebTracking_Form_Report', 'formRule']);
 
-    $buttons = array(
-        array(
-          'type' => 'upload',
-          'name' => ts('Save'),
-          'isDefault' => TRUE,
-        )
-    );
+    $buttons = [
+      [
+        'type' => 'upload',
+        'name' => E::ts('Save'),
+        'isDefault' => TRUE,
+      ]
+    ];
     $this->addButtons($buttons);
 
     parent::buildQuickForm();
@@ -73,7 +72,7 @@ class CRM_WebTracking_Form_Report extends CRM_Core_Form {
    *   list of errors to be posted back to the form
    */
   public static function formRule($values) {
-    $errors = array();
+    $errors = [];
     if (!(isset($values['web_tracking_report_id']) && strlen($values['web_tracking_report_id']) > 0)) {
       $errors['web_tracking_report_id'] = "Please enter a valid client id";
     }
@@ -82,15 +81,12 @@ class CRM_WebTracking_Form_Report extends CRM_Core_Form {
 
   /**
    * Process the form submission.
-   *
-   * @return void
    */
   public function postProcess() {
-
     $params = $this->controller->exportValues($this->_name);
     $params['web_tracking_report_id'] = CRM_Utils_Array::value('web_tracking_report_id', $params, NULL);
 
-    civicrm_api3('setting', 'create', array('sequential' => 1, 'web_tracking_report_id' => $params['web_tracking_report_id']));
+    civicrm_api3('setting', 'create', ['webtracking_report_id' => $params['web_tracking_report_id']]);
 
     $url = 'civicrm/report/webtracking';
     $urlParams = 'action=update&reset=1';
@@ -103,6 +99,7 @@ class CRM_WebTracking_Form_Report extends CRM_Core_Form {
    * @return string
    */
   public function getTitle() {
-    return ts('Web Tracking Report');
+    return E::ts('Web Tracking Report');
   }
+
 }

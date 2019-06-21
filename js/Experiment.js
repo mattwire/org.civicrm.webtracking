@@ -1,4 +1,4 @@
-<!-- Google Analytics Content Experiment code -->
+/* Google Analytics Content Experiment code */
 function utmx_section(){}function utmx(){}(function(){var
 k=CRM.vars.WebTracking.experiment_id,d=document,l=d.location,c=d.cookie;
 if(l.search.indexOf('utm_expid='+k)>0)return;
@@ -10,4 +10,4 @@ length:j))}}}var x=f('__utmx'),xx=f('__utmxx'),h=l.hash;d.write(
 '&utmx='+(x?x:'')+'&utmxx='+(xx?xx:'')+'&utmxtime='+new Date().
 valueOf()+(h?'&utmxhash='+escape(h.substr(1)):'')+
 '" type="text/javascript" charset="utf-8"><\/sc'+'ript>')})();
-<!-- End of Google Analytics Content Experiment code -->
+/* End of Google Analytics Content Experiment code */

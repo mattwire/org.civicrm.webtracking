@@ -1,6 +1,7 @@
 <?php
 
 require_once 'webtracking.civix.php';
+use CRM_WebTracking_ExtensionUtil as E;
 
 /**
  * Implements hook_civicrm_config().
@@ -131,26 +132,26 @@ function webtracking_civicrm_tabset($tabsetName, &$tabs, $context) {
   if ($tabsetName == 'civicrm/event/manage') {
     if (!empty($context)) {
       $eventID = $context['event_id'];
-      $trackingParams = array('page_id' => $eventID, 'page_category' => "civicrm_event");
+      $trackingParams = ['page_id' => $eventID, 'page_category' => "civicrm_event"];
       CRM_WebTracking_BAO_WebTracking::retrieve($trackingParams,$trackingValues);
 
       $url = CRM_Utils_System::url( 'civicrm/event/manage/webtracking',
         "reset=1&snippet=5&force=1&id=$eventID&action=update&component=event" );
       // Add a new WebTracking tab along with url 
-      $tab['webtracking'] = array(
-        'title' => ts('Web Tracking'),
+      $tab['webtracking'] = [
+        'title' => E::ts('Web Tracking'),
         'link' => $url,
         'valid' => $trackingValues['enable_tracking'],
         'active' => 1,
         'current' => false,
-      );
+      ];
     }
     else {
-      $tab['webtracking'] = array(
-        'title' => ts('Web Tracking'),
-        'url' => 'civicrm/event/manage/webtracking',
+      $tab['webtracking'] = [
+        'title' => E::ts('Web Tracking'),
+        'url' => 'civicrm/event/manage/webtracking', // putting CRM_Utils_System::url("", 'reset=1', TRUE); leads to a broken link?
         'field' => 'enable_tracking',
-      );
+      ];
     }
  
     //Insert this tab in the end  
@@ -159,43 +160,54 @@ function webtracking_civicrm_tabset($tabsetName, &$tabs, $context) {
   else if ($tabsetName == 'civicrm/event/manage/rows') {
     if (!empty($context)) {
       $eventID = $context['event_id'];
-      $trackingParams = array('page_id' => $eventID, 'page_category' => "civicrm_event");
+      $trackingParams = ['page_id' => $eventID, 'page_category' => "civicrm_event"];
       CRM_WebTracking_BAO_WebTracking::retrieve($trackingParams,$trackingValues);
       $tabs[$eventID]['enable_tracking'] = $trackingValues['enable_tracking'];
     }
   }
   else if ($tabsetName == 'civicrm/admin/contribute') {
-    if (!empty($context)) {
-      $contribPageId = $context['contrib_page_id'];
-      $trackingParams = array('page_id' => $contribPageId, 'page_category' => "civicrm_contribution");
+    if (!empty($context['contribution_page_id'])) {
+      $contribPageId = $context['contribution_page_id'];
+      $trackingParams = ['page_id' => $contribPageId, 'page_category' => "civicrm_contribution"];
       CRM_WebTracking_BAO_WebTracking::retrieve($trackingParams,$trackingValues);
 
       $url = CRM_Utils_System::url( 'civicrm/admin/contribute/webtracking',
         "reset=1&snippet=5&force=1&id=$contribPageId&action=update&component=contribute" );
       // Add a new WebTracking tab along with url 
-      $tab['webtracking'] = array(
-        'title' => ts('Web Tracking'),
+      $tab['webtracking'] = [
+        'name' => E::ts('Web Tracking'),
+        'title' => E::ts('Web Tracking'),
         'link' => $url,
         'valid' => $trackingValues['enable_tracking'],
+        'uniqueName' => 'webTracking',
         'active' => 1,
         'current' => false,
-      );
+      ];
+    }
+    else if(!empty($context['urlString']) && !empty($context['urlParams'])) {
+      $tab[] = [
+        'name' => E::ts('Web Tracking'),
+        'title' => E::ts('Web Tracking'),
+        'url' => $context['urlString'] . 'webtracking',
+        'qs' => $context['urlParams'],
+        'uniqueName' => 'webTracking'
+      ];
     }
     else {
-      $tab['webtracking'] = array(
-        'title' => ts('Web Tracking'),
-        'url' => 'civicrm/admin/contribute/webtracking',
+      $tab['webtracking'] = [
+        'title' => E::ts('Web Tracking'),
+        'url' => CRM_Utils_System::url('civicrm/admin/contribute/webtracking', 'reset=1', TRUE),
         'field' => 'enable_tracking',
-      );
+      ];
     }
  
-    //Insert this tab in the end  
-    $tabs = array_merge($tabs,$tab);
+    //Insert this tab into position 4
+    $tabs = array_merge(array_slice($tabs, 0, 4), $tab, array_slice($tabs, 4));
   }
   else if ($tabsetName == 'civicrm/admin/contribute/rows') {
     if (!empty($context)) {
       $contribPageId = $context['contrib_page_id'];
-      $trackingParams = array('page_id' => $contribPageId, 'page_category' => "civicrm_contribution");
+      $trackingParams = ['page_id' => $contribPageId, 'page_category' => "civicrm_contribution"];
       CRM_WebTracking_BAO_WebTracking::retrieve($trackingParams,$trackingValues);
       $tabs[$contribPageId]['enable_tracking'] = $trackingValues['enable_tracking'];
     }
@@ -209,19 +221,19 @@ function webtracking_civicrm_tabset($tabsetName, &$tabs, $context) {
 function webtracking_civicrm_pageRun(&$page) {
   $pageName = $page->getVar('_name');
   if ($pageName == 'CRM_Event_Page_EventInfo') {   
-    $trackingParams = array('page_id' => $page->getVar('_id'), 'page_category' => "civicrm_event");
+    $trackingParams = ['page_id' => $page->getVar('_id'), 'page_category' => "civicrm_event"];
     CRM_WebTracking_BAO_WebTracking::retrieve($trackingParams,$trackingValues);
 
     if ($trackingValues['enable_tracking'] == 1) {
       // General script for web tracking
-      CRM_Core_Resources::singleton()->addVars('WebTracking', array('tracking_id' => $trackingValues['tracking_id']));
-      CRM_Core_Resources::singleton()->addScriptFile('org.civicrm.webtracking', 'js/WebTracking.js', 10, 'html-header');
+      CRM_Core_Resources::singleton()->addVars('WebTracking', ['tracking_id' => $trackingValues['tracking_id']]);
+      CRM_Core_Resources::singleton()->addScriptFile(E::LONG_NAME, 'js/WebTracking.js', 10, 'html-header');
       $page->assign('enable_tracking',1);
 
       if ($trackingValues['is_experiment'] == 1) {
         // Script for the experiment
-        CRM_Core_Resources::singleton()->addVars('WebTracking', array('experiment_id' => $trackingValues['experiment_id']));
-        CRM_Core_Resources::singleton()->addScriptFile('org.civicrm.webtracking', 'js/Experiment.js', 11, 'html-header');
+        CRM_Core_Resources::singleton()->addVars('WebTracking', ['experiment_id' => $trackingValues['experiment_id']]);
+        CRM_Core_Resources::singleton()->addScriptFile(E::LONG_NAME, 'js/Experiment.js', 11, 'html-header');
         CRM_Core_Resources::singleton()->addScript("utmx('url','A/B');",12,'html-header');
         CRM_Core_Resources::singleton()->addScript("ga('send', 'pageview');", 13, 'html-header');
       }
@@ -257,8 +269,8 @@ function webtracking_civicrm_pageRun(&$page) {
 */
 function webtracking_civicrm_buildForm($formName, &$form) {
 
-  $contribFormNames = array('CRM_Contribute_Form_Contribution_Main', 'CRM_Contribute_Form_Contribution_ThankYou', 'CRM_Contribute_Form_Contribution_Confirm');
-  $eventFormNames = array('CRM_Event_Form_Registration_Register', 'CRM_Event_Form_Registration_ThankYou', 'CRM_Event_Form_Registration_Confirm');
+  $contribFormNames = ['CRM_Contribute_Form_Contribution_Main', 'CRM_Contribute_Form_Contribution_ThankYou', 'CRM_Contribute_Form_Contribution_Confirm'];
+  $eventFormNames = ['CRM_Event_Form_Registration_Register', 'CRM_Event_Form_Registration_ThankYou', 'CRM_Event_Form_Registration_Confirm'];
   $category = 'None';
 
   if (in_array($formName, $eventFormNames)) {
@@ -269,17 +281,17 @@ function webtracking_civicrm_buildForm($formName, &$form) {
   }
 
   if ($category == 'Event') {
-    $trackingParams = array('page_id' => $form->_eventId, 'page_category' => "civicrm_event");
+    $trackingParams = ['page_id' => $form->_eventId, 'page_category' => "civicrm_event"];
 
     CRM_WebTracking_BAO_WebTracking::retrieve($trackingParams,$trackingValues);
 
     if ($trackingValues['enable_tracking'] == 1) {
       // General script for web tracking
-      CRM_Core_Resources::singleton()->addVars('WebTracking', array('tracking_id' => $trackingValues['tracking_id']));
-      CRM_Core_Resources::singleton()->addScriptFile('org.civicrm.webtracking', 'js/WebTracking.js',10,'html-header');
+      CRM_Core_Resources::singleton()->addVars('WebTracking', ['tracking_id' => $trackingValues['tracking_id']]);
+      CRM_Core_Resources::singleton()->addScriptFile(E::LONG_NAME, 'js/WebTracking.js',10,'html-header');
 
       // Script for event tracking
-      CRM_Core_Resources::singleton()->addScriptFile('org.civicrm.webtracking', 'js/EventTracking.js');
+      CRM_Core_Resources::singleton()->addScriptFile(E::LONG_NAME, 'js/EventTracking.js');
     }
     else {
       return;
@@ -295,10 +307,10 @@ function webtracking_civicrm_buildForm($formName, &$form) {
     }
     else if ($formName == 'CRM_Event_Form_Registration_ThankYou') {
       if ($trackingValues['track_ecommerce'] == 1) {
-        CRM_Core_Resources::singleton()->addVars('WebTracking', array('trnx_id' => $form->_trxnId, 'totalAmount' => $form->_totalAmount));
+        CRM_Core_Resources::singleton()->addVars('WebTracking', ['trnx_id' => $form->_trxnId, 'totalAmount' => $form->_totalAmount]);
         // Fetching the source from the session and adding it as a variable.
         $session = CRM_Core_Session::singleton();
-        CRM_Core_Resources::singleton()->addVars('WebTracking', array('utm_source' => $session->get('utm_source')));
+        CRM_Core_Resources::singleton()->addVars('WebTracking', ['utm_source' => $session->get('utm_source')]);
         if ($form->_trxnId && $trackingValues['ga_event_tracking'] == 1) {
           CRM_Core_Resources::singleton()->addScript('trackEcommerce();');
         }
@@ -314,28 +326,28 @@ function webtracking_civicrm_buildForm($formName, &$form) {
     }    
   }
   else if ($category == 'Contribution') {
-    $trackingParams = array('page_id' => $form->_id, 'page_category' => "civicrm_contribution");
+    $trackingParams = ['page_id' => $form->_id, 'page_category' => "civicrm_contribution"];
     CRM_WebTracking_BAO_WebTracking::retrieve($trackingParams,$trackingValues);
 
     if ($trackingValues['enable_tracking'] == 1) {
 
       // General script for web tracking
-      CRM_Core_Resources::singleton()->addVars('WebTracking', array('tracking_id' => $trackingValues['tracking_id']));
-      CRM_Core_Resources::singleton()->addScriptFile('org.civicrm.webtracking', 'js/WebTracking.js',10,'html-header');
+      CRM_Core_Resources::singleton()->addVars('WebTracking', ['tracking_id' => $trackingValues['tracking_id']]);
+      CRM_Core_Resources::singleton()->addScriptFile(E::LONG_NAME, 'js/WebTracking.js',10,'html-header');
       $form->assign('enable_tracking',1);
 
       if ($formName == 'CRM_Contribute_Form_Contribution_Main') {
         if ($trackingValues['is_experiment'] == 1) {
           // Script for the experiment
-          CRM_Core_Resources::singleton()->addVars('WebTracking', array('experiment_id' => $trackingValues['experiment_id']));
-          CRM_Core_Resources::singleton()->addScriptFile('org.civicrm.webtracking', 'js/Experiment.js', 11, 'html-header');
+          CRM_Core_Resources::singleton()->addVars('WebTracking', ['experiment_id' => $trackingValues['experiment_id']]);
+          CRM_Core_Resources::singleton()->addScriptFile(E::LONG_NAME, 'js/Experiment.js', 11, 'html-header');
           CRM_Core_Resources::singleton()->addScript("utmx('url','A/B');",12,'html-header');
           CRM_Core_Resources::singleton()->addScript("ga('send', 'pageview');", 13, 'html-header');
         }
         else {
           CRM_Core_Resources::singleton()->addScript("ga('send', 'pageview');",11,'html-header');
           // Script for event tracking
-          CRM_Core_Resources::singleton()->addScriptFile('org.civicrm.webtracking', 'js/EventTracking.js');
+          CRM_Core_Resources::singleton()->addScriptFile(E::LONG_NAME, 'js/EventTracking.js');
           if ($trackingValues['track_register'] == 1 && $trackingValues['ga_event_tracking'] == 1) {
             CRM_Core_Resources::singleton()->addScript('trackViewRegistration();');
           }
@@ -356,18 +368,18 @@ function webtracking_civicrm_buildForm($formName, &$form) {
         }
       }
       else if ($formName == 'CRM_Contribute_Form_Contribution_Confirm' && $trackingValues['ga_event_tracking'] == 1) {
-        CRM_Core_Resources::singleton()->addScriptFile('org.civicrm.webtracking', 'js/EventTracking.js');
+        CRM_Core_Resources::singleton()->addScriptFile(E::LONG_NAME, 'js/EventTracking.js');
         if ($trackingValues['track_confirm_register'] == 1) {
           CRM_Core_Resources::singleton()->addScript("ga('send', 'event', 'Confirmation Page', 'Viewed')");
         }
       }
       else if ($formName == 'CRM_Contribute_Form_Contribution_ThankYou') {
-        CRM_Core_Resources::singleton()->addScriptFile('org.civicrm.webtracking', 'js/EventTracking.js');
+        CRM_Core_Resources::singleton()->addScriptFile(E::LONG_NAME, 'js/EventTracking.js');
         if ($trackingValues['track_ecommerce'] == 1) {
-          CRM_Core_Resources::singleton()->addVars('WebTracking', array('trnx_id' => rand(), 'totalAmount' => $form->_amount));
+          CRM_Core_Resources::singleton()->addVars('WebTracking', ['trnx_id' => rand(), 'totalAmount' => $form->_amount]);
           // Fetching the source from the session and adding it as a variable.
           $session = CRM_Core_Session::singleton();
-          CRM_Core_Resources::singleton()->addVars('WebTracking', array('utm_source' => $session->get('utm_source')));
+          CRM_Core_Resources::singleton()->addVars('WebTracking', ['utm_source' => $session->get('utm_source')]);
           if ($trackingValues['ga_event_tracking'] == 1) {
             CRM_Core_Resources::singleton()->addScript('trackEcommerce();');
           }
@@ -387,35 +399,26 @@ function webtracking_civicrm_buildForm($formName, &$form) {
 * This hook is used to add the web tracking report link to the navigation menu
 *
 */
-function webtracking_civicrm_navigationMenu(&$params) {
- 
-  // Check that our item doesn't already exist
-  $menu_item_search = array('url' => 'civicrm/report/webtracking');
-  $menu_items = array();
-  CRM_Core_BAO_Navigation::retrieve($menu_item_search, $menu_items);
- 
-  if ( ! empty($menu_items) ) { 
-    return;
-  }
- 
-  $navId = CRM_Core_DAO::singleValueQuery("SELECT max(id) FROM civicrm_navigation");
-  if (is_integer($navId)) {
-    $navId++;
-  }
-  // Find the Report menu
-  $reportID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Navigation', 'Reports', 'id', 'name');
+function webtracking_civicrm_navigationMenu(&$menu) {
+  $item[] =  [
+    'label' => E::ts('Web Tracking Report'),
+    'name' => 'web_tracking_report',
+    'url' => CRM_Utils_System::url('civicrm/report/webtracking', 'reset=1', TRUE),
+    'permission' => 'access CiviReport,access CiviEvent',
+    'operator' => 'OR',
+    'separator' => 1,
+    'active' => 1
+  ];
+  _webtracking_civix_insert_navigation_menu($menu, 'Reports', $item[0]);
 
-  $params[$reportID]['child'][$navId] = array (
-    'attributes' => array (
-      'label' => ts('Web Tracking Report',array('domain' => 'org.civicrm.webtracking')),
-      'name' => 'Web Tracking Report',
-      'url' => 'civicrm/report/webtracking',
-      'permission' => 'access CiviReport,access CiviEvent',
-      'operator' => 'OR',
-      'separator' => 1,
-      'parentID' => $reportID,
-      'navID' => $navId,
-      'active' => 1
-    )   
-  );  
+  $item[] = [
+    'label' => E::ts('Web Tracking Settings'),
+    'name'       => 'web_tracking_settings',
+    'url'        => CRM_Utils_System::url('civicrm/admin/webtracking/settings', 'reset=1', TRUE),
+    'permission' => 'administer CiviCRM',
+    'operator'   => NULL,
+    'separator'  => NULL,
+  ];
+  _webtracking_civix_insert_navigation_menu($menu, 'Administer', $item[1]);
+  _webtracking_civix_navigationMenu($menu);
 }

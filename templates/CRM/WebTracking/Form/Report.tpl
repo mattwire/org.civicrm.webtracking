@@ -1,22 +1,10 @@
-<input id='toggleReportParams' class='report-webtracking-button' type='button' value='Configure Client ID'>
-<div id='ReportParams'>
-  <table class="form-table-report-webtracking">
-    <tr class="crm-report-webtracking-form-block-web_tracking_report_id">
-        <td>{$form.web_tracking_report_id.label} {help id="web-tracking-report-id"}</td>
-        <td>{$form.web_tracking_report_id.html} </br></td>
-    </tr>
-    <tr class="crm-submit-buttons">
-        <td>{include file="CRM/common/formButtons.tpl"}</td>
-        <td></td>
-    </tr>
-  </table>
-</div>
+{* https://civicrm.org/licensing *}
 
 <div id='EmbedAPI'>
   <aside class="Header-auth" id="header-auth">
     <div class="Header-embedApi" id="embed-api-auth-container"></div>
     <a class="Header-logout" href="https://accounts.google.com/logout">Logout</a>
-  </aside> 
+  </aside>
 
   <div class="Content">
     <div class="Dashboard Dashboard--full">
@@ -78,24 +66,5 @@
         </li>
       </ul>
     </div>
-  </div>  
+  </div>
 </div>
-
-{literal}
-<script>
-  CRM.$(function($) {
-    
-    if (!($("#web_tracking_report_id").val())) {
-      $("#EmbedAPI").hide();
-    }
-    else {
-      $("#ReportParams").hide();
-    }
-
-    $("#toggleReportParams").on('click', function(event) {
-      $("#ReportParams").toggle();
-    });
-
-  });
-</script>
-{/literal}
