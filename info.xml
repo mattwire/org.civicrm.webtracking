@@ -9,7 +9,7 @@
     <email>mjw@mjwconsult.co.uk, vishalagarwal3010@gmail.com</email>
   </maintainer>
   <urls>
-    <url desc="Main Extension Page">https://github.com/mattwire/org.civicrm.webtracking</url>
+    <url desc="Main Extension Page">https://github.com/mjwconsult/org.civicrm.webtracking</url>
     <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
   <releaseDate>2019-06-19</releaseDate>
