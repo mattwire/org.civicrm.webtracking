@@ -139,7 +139,7 @@ function webtracking_civicrm_tabset($tabsetName, &$tabs, $context) {
         "reset=1&snippet=5&force=1&id=$eventID&action=update&component=event" );
       // Add a new WebTracking tab along with url
       $tab['webtracking'] = [
-        'title' => E::ts('Web Tracking'),
+        'title' => E::ts('Google Analytics'),
         'link' => $url,
         'valid' => $trackingValues['enable_tracking'],
         'active' => 1,
@@ -148,7 +148,7 @@ function webtracking_civicrm_tabset($tabsetName, &$tabs, $context) {
     }
     else {
       $tab['webtracking'] = [
-        'title' => E::ts('Web Tracking'),
+        'title' => E::ts('Google Analytics'),
         'url' => 'civicrm/event/manage/webtracking', // putting CRM_Utils_System::url("", 'reset=1', TRUE); leads to a broken link?
         'field' => 'enable_tracking',
       ];
@@ -175,8 +175,8 @@ function webtracking_civicrm_tabset($tabsetName, &$tabs, $context) {
         "reset=1&snippet=5&force=1&id=$contribPageId&action=update&component=contribute" );
       // Add a new WebTracking tab along with url
       $tab['webtracking'] = [
-        'name' => E::ts('Web Tracking'),
-        'title' => E::ts('Web Tracking'),
+        'name' => E::ts('Google Analytics'),
+        'title' => E::ts('Google Analytics'),
         'link' => $url,
         'valid' => $trackingValues['enable_tracking'],
         'uniqueName' => 'webTracking',
@@ -186,8 +186,8 @@ function webtracking_civicrm_tabset($tabsetName, &$tabs, $context) {
     }
     else if(!empty($context['urlString']) && !empty($context['urlParams'])) {
       $tab[] = [
-        'name' => E::ts('Web Tracking'),
-        'title' => E::ts('Web Tracking'),
+        'name' => E::ts('Google Analytics'),
+        'title' => E::ts('Google Analytics'),
         'url' => $context['urlString'] . 'webtracking',
         'qs' => $context['urlParams'],
         'uniqueName' => 'webTracking'
@@ -195,7 +195,7 @@ function webtracking_civicrm_tabset($tabsetName, &$tabs, $context) {
     }
     else {
       $tab['webtracking'] = [
-        'title' => E::ts('Web Tracking'),
+        'title' => E::ts('Google Analytics'),
         'url' => CRM_Utils_System::url('civicrm/admin/contribute/webtracking', 'reset=1', TRUE),
         'field' => 'enable_tracking',
       ];
@@ -432,7 +432,7 @@ function webtracking_civicrm_buildForm($formName, &$form) {
 */
 function webtracking_civicrm_navigationMenu(&$menu) {
   $item[] =  [
-    'label' => E::ts('Web Tracking Report'),
+    'label' => E::ts('Google Analytics Report'),
     'name' => 'web_tracking_report',
     'url' => CRM_Utils_System::url('civicrm/report/webtracking', 'reset=1', TRUE),
     'permission' => 'access CiviReport,access CiviEvent',
@@ -443,7 +443,7 @@ function webtracking_civicrm_navigationMenu(&$menu) {
   _webtracking_civix_insert_navigation_menu($menu, 'Reports', $item[0]);
 
   $item[] = [
-    'label' => E::ts('Web Tracking Settings'),
+    'label' => E::ts('Google Analytics Settings'),
     'name'       => 'web_tracking_settings',
     'url'        => CRM_Utils_System::url('civicrm/admin/webtracking/settings', 'reset=1', TRUE),
     'permission' => 'administer CiviCRM',

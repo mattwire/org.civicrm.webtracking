@@ -99,7 +99,7 @@ class CRM_WebTracking_Form_Report extends CRM_Core_Form {
    * @return string
    */
   public function getTitle() {
-    return E::ts('Web Tracking Report');
+    return E::ts('Google Analytics Report');
   }
 
 }

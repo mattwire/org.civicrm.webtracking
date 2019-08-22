@@ -53,7 +53,7 @@ class CRM_WebTracking_Form_ContributionPage_WebTracking extends CRM_Contribute_F
 
     // Checkbox to ask whether or not to track when the user visits the confirmation page
     $this->addElement('checkbox', 'track_confirm_register', E::ts('Track visit to confirmation page'));
-    
+
     // Checkbox to ask whether or not to track when the user visits the thank you page
     $this->addElement('checkbox', 'track_thank_you', E::ts('Track visit to thank you page'));
 
@@ -63,7 +63,7 @@ class CRM_WebTracking_Form_ContributionPage_WebTracking extends CRM_Contribute_F
     // Checkbox to ask whether or not to enable ecommerce tracking
     $this->addElement('checkbox', 'track_ecommerce', E::ts('Enable source tracking'));
 
-    // Checkbox to ask whether the page is the primary page of the experiment 
+    // Checkbox to ask whether the page is the primary page of the experiment
     $this->addElement('checkbox', 'is_experiment', E::ts('Primary page of experiment'));
 
     // Text field to input the experiment key
@@ -87,7 +87,7 @@ class CRM_WebTracking_Form_ContributionPage_WebTracking extends CRM_Contribute_F
 
     if (isset($values['enable_tracking']) && $values['enable_tracking'] == 1) {
       // Checking that UAID provided by the customer has the string 'UA-' as its prefix
-      $pos = strpos($values['tracking_id'],'UA-'); 
+      $pos = strpos($values['tracking_id'],'UA-');
       if ($pos===false || $pos!==0) {
         $errors['tracking_id'] = E::ts('Please provide a valid tracking id');
       }
@@ -98,7 +98,7 @@ class CRM_WebTracking_Form_ContributionPage_WebTracking extends CRM_Contribute_F
         $errors['experiment_id'] = E::ts('Please provide a valid experiment key');
       }
     }
-    
+
     return $errors;
   }
 
@@ -112,12 +112,12 @@ class CRM_WebTracking_Form_ContributionPage_WebTracking extends CRM_Contribute_F
     $existParams['page_id'] = $this->_id;
     $existParams['page_category'] = self::PAGE_CATEGORY;
     $existingEnrty = [];
-    
+
     CRM_WebTracking_BAO_WebTracking::retrieve($existParams, $existingEnrty);
 
-    // Setting up the params array with the values obtained from the form 
+    // Setting up the params array with the values obtained from the form
     if (!empty($existingEnrty)) {
-       $params['id'] = $existingEnrty['id']; 
+       $params['id'] = $existingEnrty['id'];
     }
     $params['page_id'] = $this->_id;
     $params['page_category']="civicrm_contribution";
@@ -130,7 +130,7 @@ class CRM_WebTracking_Form_ContributionPage_WebTracking extends CRM_Contribute_F
     $params['track_confirm_register'] = CRM_Utils_Array::value('track_confirm_register', $params, FALSE);
     $params['track_thank_you'] = CRM_Utils_Array::value('track_thank_you', $params, FALSE);
     $params['track_price_change'] = CRM_Utils_Array::value('track_price_change', $params, FALSE);
-    
+
     $params['track_ecommerce'] = CRM_Utils_Array::value('track_ecommerce', $params, FALSE);
 
     $params['is_experiment'] = CRM_Utils_Array::value('is_experiment', $params, FALSE);
@@ -148,7 +148,7 @@ class CRM_WebTracking_Form_ContributionPage_WebTracking extends CRM_Contribute_F
    * @return string
    */
   public function getTitle() {
-    return E::ts('Contribution Web Tracking Settings');
+    return E::ts('Contribution Google Analytics Settings');
   }
 
 }

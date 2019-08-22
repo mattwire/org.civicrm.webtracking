@@ -55,7 +55,7 @@ class CRM_WebTracking_Form_Event extends CRM_Event_Form_ManageEvent {
 
     // Checkbox to ask whether or not to track when the user visits the confirmation page
     $this->addElement('checkbox', 'track_confirm_register', E::ts('Track visit to confirmation page'));
-    
+
     // Checkbox to ask whether or not to track when the user visits the thank you page
     $this->addElement('checkbox', 'track_thank_you', E::ts('Track visit to thank you page'));
 
@@ -65,7 +65,7 @@ class CRM_WebTracking_Form_Event extends CRM_Event_Form_ManageEvent {
     // Checkbox to ask whether or not to enable ecommerce tracking
     $this->addElement('checkbox', 'track_ecommerce', E::ts('Enable source tracking'));
 
-    // Checkbox to ask whether the page is the primary page of the experiment 
+    // Checkbox to ask whether the page is the primary page of the experiment
     $this->addElement('checkbox', 'is_experiment', E::ts('Primary page of experiment'));
 
     // Text field to input the experiment key
@@ -91,7 +91,7 @@ class CRM_WebTracking_Form_Event extends CRM_Event_Form_ManageEvent {
       // Checking that UAID provided by the customer has the string 'UA-' as its prefix
       $pos = strpos($values['tracking_id'],'UA-');
       if ($pos===false || $pos!==0) {
-        form_set_error('tracking_id', E::ts('Please configure a valid Tracking ID (in Administer->Web Tracking Settings'));
+        form_set_error('tracking_id', E::ts('Please configure a valid Tracking ID (in Administer->Google Analytics Settings'));
         $errors['tracking_id'] = true;
       }
     }
@@ -102,7 +102,7 @@ class CRM_WebTracking_Form_Event extends CRM_Event_Form_ManageEvent {
         $errors['experiment_id'] = true;
       }
     }
-    
+
     return $errors;
   }
 
@@ -120,12 +120,12 @@ class CRM_WebTracking_Form_Event extends CRM_Event_Form_ManageEvent {
       'page_category' => self::PAGE_CATEGORY,
     ];
     $existingEntry = [];
-    
+
     CRM_WebTracking_BAO_WebTracking::retrieve($existParams, $existingEntry);
 
-    // Setting up the params array with the values obtained from the form 
+    // Setting up the params array with the values obtained from the form
     if (!empty($existingEntry)) {
-       $params['id'] = $existingEntry['id']; 
+       $params['id'] = $existingEntry['id'];
     }
 
     $params['page_id'] = $this->_id;
@@ -139,7 +139,7 @@ class CRM_WebTracking_Form_Event extends CRM_Event_Form_ManageEvent {
     $params['track_confirm_register'] = CRM_Utils_Array::value('track_confirm_register', $params, FALSE);
     $params['track_thank_you'] = CRM_Utils_Array::value('track_thank_you', $params, FALSE);
     $params['track_price_change'] = CRM_Utils_Array::value('track_price_change', $params, FALSE);
-    
+
     $params['track_ecommerce'] = CRM_Utils_Array::value('track_ecommerce', $params, FALSE);
 
     $params['is_experiment'] = CRM_Utils_Array::value('is_experiment', $params, FALSE);
@@ -157,7 +157,7 @@ class CRM_WebTracking_Form_Event extends CRM_Event_Form_ManageEvent {
    * @return string
    */
   public function getTitle() {
-    return E::ts('Event Web Tracking Settings');
+    return E::ts('Event Google Analytics Settings');
   }
 
 }

@@ -1,11 +1,11 @@
-# Web Tracking (Google Analytics)
+# Google Analytics Event and E-Commerce Tracking
 This extension adds google analytics tracking to contribution/event registration pages.
 
 It was originally developed by Vishal Agarwal as part of a Google Summer of Code project in 2015. For history see http://forum.civicrm.org/index.php?topic=36090.0
 
 ## Usage
 
-* Configure global settings at Administer->Web Tracking Settings.
+* Configure global settings at Administer->Google Analytics Settings.
 * Configure individual contribution / event pages via the "Web tracking" tab on the individual pages.
 
 #### Web Tracking
@@ -16,7 +16,7 @@ This feature allows organizations to track traffic for their online event and co
 
 The event tracking feature enables organizations to determine the manner in which users interact with their pages. Organizations can determine things like how many visitors choose to change the fee amount from the default selection, how many visitors visited the main page, the registration page, the confirmation page and the final thank you page. Current implementation covers fixed set of events.
 
-An E-commerce tracking feature has also been implemented. This would enable organizations to determine the amount of revenue that is generated from a particular source of traffic. For example, determining exactly how much money was raised for a Donation from the publicity obtained by people liking the Donation page on Facebook, by people sharing the link to the web site on Google Plus, by people writing mails to their friends asking them to contribute, etc. 
+An E-commerce tracking feature has also been implemented. This would enable organizations to determine the amount of revenue that is generated from a particular source of traffic. For example, determining exactly how much money was raised for a Donation from the publicity obtained by people liking the Donation page on Facebook, by people sharing the link to the web site on Google Plus, by people writing mails to their friends asking them to contribute, etc.
 
 #### Tracking Report
 

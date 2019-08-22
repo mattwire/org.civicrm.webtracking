@@ -3,25 +3,25 @@
   <item>
     <path>civicrm/event/manage/webtracking</path>
     <page_callback>CRM_WebTracking_Form_Event</page_callback>
-    <title>Web Tracking</title>
+    <title>Google Analytics</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
     <path>civicrm/admin/contribute/webtracking</path>
     <page_callback>CRM_WebTracking_Form_ContributionPage_WebTracking</page_callback>
-    <title>Web Tracking</title>
+    <title>Google Analytics</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
     <path>civicrm/report/webtracking</path>
     <page_callback>CRM_WebTracking_Form_Report</page_callback>
-    <title>Web Tracking Report</title>
+    <title>Google Analytics Report</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
   <item>
     <path>civicrm/admin/webtracking/settings</path>
     <page_callback>CRM_WebTracking_Form_Settings</page_callback>
-    <title>Web Tracking Settings</title>
+    <title>Google Analytics Settings</title>
     <access_arguments>administer CiviCRM</access_arguments>
   </item>
 </menu>
