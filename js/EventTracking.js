@@ -5,8 +5,8 @@ function trackPriceChange() {
 			var id = event.target.id;
 			if ($("#"+ id).is(':checked')) {
 				var eventString = $("#"+id).attr('data-amount') + " " + $("#"+id).attr('data-currency');
-				ga('send', 'event', eventString, 'Selected');	
-			}	
+				ga('send', 'event', eventString, 'Selected');
+			}
 		});
 	});
 }
@@ -30,7 +30,7 @@ function trackEcommerce() {
 function trackViewRegistration() {
 	CRM.$(function($) {
 		if ($("#errorList li").length == 0) {
-			ga('send', 'event', 'Registration Page', 'Viewed');	
+			ga('send', 'event', 'Registration Page', 'Viewed');
 		}
 	});
 }
