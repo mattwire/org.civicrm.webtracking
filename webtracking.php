@@ -307,42 +307,11 @@ function webtracking_civicrm_buildForm($formName, &$form) {
     }
     else if ($formName == 'CRM_Event_Form_Registration_ThankYou') {
       if ($trackingValues['track_ecommerce'] == 1 && !empty($form->_values['event']['is_monetary'])) {
-        $ecommerceVars = [
-          'totalAmount' => $form->_totalAmount,
-        ];
-        if (!empty($form->_values['params']['is_pay_later']) && !empty($form->_values['contributionId'])) {
-          $contribution = civicrm_api3('Contribution', 'getsingle', [
-            'id' => $form->_values['contributionId'],
-            'return' => ['invoice_id'],
-          ]);
-          $ecommerceVars['trnx_id'] = $contribution['invoice_id'];
-        } else {
-          $ecommerceVars['trnx_id'] = $form->_trxnId;
-        }
-
-        // add line items for recording transaction items
-        // see https://developers.google.com/analytics/devguides/collection/analyticsjs/ecommerce#addItem
-        if (!empty($form->_lineItem)) {
-          $ecommerceVars['lineItems'] = array_reduce(
-            $form->_lineItem,
-            function($items, $lineItem) use ($ecommerceVars) {
-              $item = reset($lineItem);
-              $items[] = [
-                'id' => $ecommerceVars['trnx_id'],
-                'name' => "{$item['field_title']} - {$item['label']}",
-                'price' => $item['unit_price'],
-                'quantity' => $item['qty'],
-              ];
-              return $items;
-            },
-            []
-          );
-        }
-
         // Fetching the source from the session and adding it as a variable.
         $session = CRM_Core_Session::singleton();
         CRM_Core_Resources::singleton()->addVars('WebTracking', ['utm_source' => $session->get('utm_source')]);
 
+        $ecommerceVars = CRM_WebTracking_Utils::getEcommerceTrackingData($form);
         CRM_Core_Resources::singleton()->addVars('WebTracking', $ecommerceVars);
         CRM_Core_Resources::singleton()->addScript('trackEcommerce();');
       }
@@ -407,13 +376,13 @@ function webtracking_civicrm_buildForm($formName, &$form) {
       else if ($formName == 'CRM_Contribute_Form_Contribution_ThankYou') {
         CRM_Core_Resources::singleton()->addScriptFile(E::LONG_NAME, 'js/EventTracking.js');
         if ($trackingValues['track_ecommerce'] == 1) {
-          CRM_Core_Resources::singleton()->addVars('WebTracking', ['trnx_id' => rand(), 'totalAmount' => $form->_amount]);
           // Fetching the source from the session and adding it as a variable.
           $session = CRM_Core_Session::singleton();
           CRM_Core_Resources::singleton()->addVars('WebTracking', ['utm_source' => $session->get('utm_source')]);
-          if ($trackingValues['ga_event_tracking'] == 1) {
-            CRM_Core_Resources::singleton()->addScript('trackEcommerce();');
-          }
+
+          $ecommerceVars = CRM_WebTracking_Utils::getEcommerceTrackingData($form);
+          CRM_Core_Resources::singleton()->addVars('WebTracking', $ecommerceVars);
+          CRM_Core_Resources::singleton()->addScript('trackEcommerce();');
         }
         if ($trackingValues['track_thank_you'] == 1 && $trackingValues['ga_event_tracking'] == 1) {
           CRM_Core_Resources::singleton()->addScript("ga('send', 'event', 'Thank You Page', 'Viewed')");
