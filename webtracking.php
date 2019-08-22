@@ -320,6 +320,25 @@ function webtracking_civicrm_buildForm($formName, &$form) {
           $ecommerceVars['trnx_id'] = $form->_trxnId;
         }
 
+        // add line items for recording transaction items
+        // see https://developers.google.com/analytics/devguides/collection/analyticsjs/ecommerce#addItem
+        if (!empty($form->_lineItem)) {
+          $ecommerceVars['lineItems'] = array_reduce(
+            $form->_lineItem,
+            function($items, $lineItem) use ($ecommerceVars) {
+              $item = reset($lineItem);
+              $items[] = [
+                'id' => $ecommerceVars['trnx_id'],
+                'name' => "{$item['field_title']} - {$item['label']}",
+                'price' => $item['unit_price'],
+                'quantity' => $item['qty'],
+              ];
+              return $items;
+            },
+            []
+          );
+        }
+
         // Fetching the source from the session and adding it as a variable.
         $session = CRM_Core_Session::singleton();
         CRM_Core_Resources::singleton()->addVars('WebTracking', ['utm_source' => $session->get('utm_source')]);

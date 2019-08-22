@@ -15,6 +15,7 @@ function trackEcommerce() {
 	var trnxId = CRM.vars.WebTracking.trnx_id;
 	var totalAmount = CRM.vars.WebTracking.totalAmount;
 	var source = CRM.vars.WebTracking.utm_source;
+	var lineItems = CRM.vars.WebTracking.lineItems;
 
 	ga('require', 'ecommerce');
 	ga('ecommerce:addTransaction', {
@@ -24,6 +25,12 @@ function trackEcommerce() {
 			'shipping': '0',                  // Shipping.
 			'tax': '0'                     	  // Tax.
 	});
+	// add items for this transaction
+	if (lineItems.length) {
+		lineItems.map(function(item) {
+			ga('ecommerce:addItem', item);
+		});
+	}
 	ga('ecommerce:send');
 }
 
