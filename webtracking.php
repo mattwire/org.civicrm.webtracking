@@ -306,7 +306,7 @@ function webtracking_civicrm_buildForm($formName, &$form) {
       }
     }
     else if ($formName == 'CRM_Event_Form_Registration_ThankYou') {
-      if ($trackingValues['track_ecommerce'] == 1) {
+      if ($trackingValues['track_ecommerce'] == 1 && !empty($form->_values['event']['is_monetary'])) {
         CRM_Core_Resources::singleton()->addVars('WebTracking', ['trnx_id' => $form->_trxnId, 'totalAmount' => $form->_totalAmount]);
         // Fetching the source from the session and adding it as a variable.
         $session = CRM_Core_Session::singleton();
