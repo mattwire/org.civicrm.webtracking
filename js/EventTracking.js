@@ -26,7 +26,7 @@ function trackEcommerce() {
 			'tax': '0'                     	  // Tax.
 	});
 	// add items for this transaction
-	if (lineItems.length) {
+	if (lineItems && lineItems.length) {
 		lineItems.map(function(item) {
 			ga('ecommerce:addItem', item);
 		});
