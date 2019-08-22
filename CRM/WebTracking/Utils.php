@@ -25,7 +25,7 @@ class CRM_WebTracking_Utils {
 
     // use transaction id for live transactions
     if (!empty($form->_trxnId)) {
-      $ecommerceVars['trnx_id'] = $form->_trxnId;
+      $ecommerceVars['trxn_id'] = $form->_trxnId;
     } elseif (
       !empty($form->_values['params']['is_pay_later']) && !empty($form->_values['contributionId'])
     ) {
@@ -34,12 +34,12 @@ class CRM_WebTracking_Utils {
         'id' => $form->_values['contributionId'],
         'return' => ['invoice_id'],
       ]);
-      $ecommerceVars['trnx_id'] = $contribution['invoice_id'];
+      $ecommerceVars['trxn_id'] = $contribution['invoice_id'];
     } else {
       // for pay later contributions and memberships we don't have
       // a contribution id, use a prefixed random transaction id instead
       $prefix = "contribution_page_id_{$form->_values['id']}_";
-      $ecommerceVars['trnx_id'] = $prefix . rand();
+      $ecommerceVars['trxn_id'] = $prefix . rand();
     }
 
     // add line items for recording transaction items
@@ -50,7 +50,7 @@ class CRM_WebTracking_Utils {
         function($items, $lineItem) use ($ecommerceVars) {
           $item = reset($lineItem);
           $items[] = [
-            'id' => $ecommerceVars['trnx_id'],
+            'id' => $ecommerceVars['trxn_id'],
             'name' => "{$item['field_title']} - {$item['label']}",
             'price' => $item['unit_price'],
             'quantity' => $item['qty'],

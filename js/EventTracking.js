@@ -12,14 +12,14 @@ function trackPriceChange() {
 }
 
 function trackEcommerce() {
-	var trnxId = CRM.vars.WebTracking.trnx_id;
+	var trxnId = CRM.vars.WebTracking.trxn_id;
 	var totalAmount = CRM.vars.WebTracking.totalAmount;
 	var source = CRM.vars.WebTracking.utm_source;
 	var lineItems = CRM.vars.WebTracking.lineItems;
 
 	ga('require', 'ecommerce');
 	ga('ecommerce:addTransaction', {
-			'id': trnxId,                     // Transaction ID. Required.
+			'id': trxnId,                     // Transaction ID. Required.
 			'affiliation': source,   		  // Affiliation or store name.
 			'revenue': totalAmount,           // Grand Total.
 			'shipping': '0',                  // Shipping.
