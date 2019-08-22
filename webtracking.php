@@ -307,10 +307,24 @@ function webtracking_civicrm_buildForm($formName, &$form) {
     }
     else if ($formName == 'CRM_Event_Form_Registration_ThankYou') {
       if ($trackingValues['track_ecommerce'] == 1 && !empty($form->_values['event']['is_monetary'])) {
-        CRM_Core_Resources::singleton()->addVars('WebTracking', ['trnx_id' => $form->_trxnId, 'totalAmount' => $form->_totalAmount]);
+        $ecommerceVars = [
+          'totalAmount' => $form->_totalAmount,
+        ];
+        if (!empty($form->_values['params']['is_pay_later']) && !empty($form->_values['contributionId'])) {
+          $contribution = civicrm_api3('Contribution', 'getsingle', [
+            'id' => $form->_values['contributionId'],
+            'return' => ['invoice_id'],
+          ]);
+          $ecommerceVars['trnx_id'] = $contribution['invoice_id'];
+        } else {
+          $ecommerceVars['trnx_id'] = $form->_trxnId;
+        }
+
         // Fetching the source from the session and adding it as a variable.
         $session = CRM_Core_Session::singleton();
         CRM_Core_Resources::singleton()->addVars('WebTracking', ['utm_source' => $session->get('utm_source')]);
+
+        CRM_Core_Resources::singleton()->addVars('WebTracking', $ecommerceVars);
         CRM_Core_Resources::singleton()->addScript('trackEcommerce();');
       }
       if ($trackingValues['track_thank_you'] == 1 && $trackingValues['ga_event_tracking'] == 1) {
