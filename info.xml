@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension key="org.civicrm.webtracking" type="module">
   <file>webtracking</file>
-  <name>Web Tracking Extension</name>
+  <name>Google Analytics Event and E-Commerce Tracking</name>
   <description>Enables web tracking features for event and contribution pages</description>
   <license>AGPL-3.0</license>
   <maintainer>
