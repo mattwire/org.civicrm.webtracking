@@ -311,9 +311,7 @@ function webtracking_civicrm_buildForm($formName, &$form) {
         // Fetching the source from the session and adding it as a variable.
         $session = CRM_Core_Session::singleton();
         CRM_Core_Resources::singleton()->addVars('WebTracking', ['utm_source' => $session->get('utm_source')]);
-        if ($form->_trxnId && $trackingValues['ga_event_tracking'] == 1) {
-          CRM_Core_Resources::singleton()->addScript('trackEcommerce();');
-        }
+        CRM_Core_Resources::singleton()->addScript('trackEcommerce();');
       }
       if ($trackingValues['track_thank_you'] == 1 && $trackingValues['ga_event_tracking'] == 1) {
         CRM_Core_Resources::singleton()->addScript("ga('send', 'event', 'Thank You Page', 'Viewed')");
