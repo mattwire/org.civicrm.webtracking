@@ -63,7 +63,7 @@ class CRM_WebTracking_Form_Event extends CRM_Event_Form_ManageEvent {
     $this->addElement('checkbox', 'track_price_change', E::ts('Track price change'));
 
     // Checkbox to ask whether or not to enable ecommerce tracking
-    $this->addElement('checkbox', 'track_ecommerce', E::ts('Enable source tracking'));
+    $this->addElement('checkbox', 'track_ecommerce', E::ts('Enable ecommerce tracking'));
 
     // Checkbox to ask whether the page is the primary page of the experiment
     $this->addElement('checkbox', 'is_experiment', E::ts('Primary page of experiment'));
