@@ -38,35 +38,35 @@ class CRM_WebTracking_Form_Event extends CRM_Event_Form_ManageEvent {
    */
   public function buildQuickForm() {
     // Checkbox to ask whether or not to enable web tracking
-    $this->addElement('checkbox', 'enable_tracking', E::ts('Enable web tracking'));
+    $this->add('checkbox', 'enable_tracking', E::ts('Enable Tracking'));
 
     // Text field to input the tracking id
     $element = $this->add('text', 'tracking_id', E::ts('Tracking ID'));
     $element->freeze();
 
     // Checkbox to ask whether or not to enable event tracking
-    $this->addElement('checkbox', 'ga_event_tracking', E::ts('Enable event tracking'));
+    $this->add('checkbox', 'ga_event_tracking', E::ts('Enable event tracking'));
 
     // Checkbox to ask whether or not to track when the user visits the info page
-    $this->addElement('checkbox', 'track_info', E::ts('Track visit to info page'));
+    $this->add('checkbox', 'track_info', E::ts('Track visit to info page'));
 
     // Checkbox to ask whether or not to track when the user visits the registration page
-    $this->addElement('checkbox', 'track_register', E::ts('Track visit to registration page'));
+    $this->add('checkbox', 'track_register', E::ts('Track visit to registration page'));
 
     // Checkbox to ask whether or not to track when the user visits the confirmation page
-    $this->addElement('checkbox', 'track_confirm_register', E::ts('Track visit to confirmation page'));
+    $this->add('checkbox', 'track_confirm_register', E::ts('Track visit to confirmation page'));
 
     // Checkbox to ask whether or not to track when the user visits the thank you page
-    $this->addElement('checkbox', 'track_thank_you', E::ts('Track visit to thank you page'));
+    $this->add('checkbox', 'track_thank_you', E::ts('Track visit to thank you page'));
 
     // Checkbox to ask whether or not to track when the user changes default price option
-    $this->addElement('checkbox', 'track_price_change', E::ts('Track price change'));
+    $this->add('checkbox', 'track_price_change', E::ts('Track price change'));
 
     // Checkbox to ask whether or not to enable ecommerce tracking
-    $this->addElement('checkbox', 'track_ecommerce', E::ts('Enable ecommerce tracking'));
+    $this->add('checkbox', 'track_ecommerce', E::ts('Enable ecommerce tracking'));
 
     // Checkbox to ask whether the page is the primary page of the experiment
-    $this->addElement('checkbox', 'is_experiment', E::ts('Primary page of experiment'));
+    $this->add('checkbox', 'is_experiment', E::ts('Primary page of experiment'));
 
     // Text field to input the experiment key
     $this->add('text', 'experiment_id', E::ts('Experiment key'));
