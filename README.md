@@ -1,3 +1,5 @@
+# MOVED to https://lab.civicrm.org/extensions/webtracking
+
 # Google Analytics Event and E-Commerce Tracking
 This extension adds google analytics tracking to contribution/event registration pages.
 
