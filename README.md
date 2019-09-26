@@ -25,3 +25,7 @@ This feature allows organizations to view a summary of the tracking reports gene
 #### AB Testing
 
 This feature allows organizations to run AB tests on the web pages created by them. Organizations can run AB tests on upto 10 variants of the same web page. At the end of this test the organization may choose to retain the variant which performed the best on a pre chosen metric and discard the rest.
+
+## Potential development
+
+Facebook offers a similar tracking API: https://developers.facebook.com/docs/facebook-pixel/implementation/conversion-tracking/
